@@ -1,0 +1,1245 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>AetherLink 3D Vibrante - 300 Niveles y Vida Soñada</title>
+  <style>
+    :root {
+      --bg-top: #140929;
+      --bg-mid: #1c1042;
+      --bg-bottom: #080b1e;
+      --glass: rgba(36, 22, 74, 0.78);
+      --glass-border: rgba(232, 121, 249, 0.28);
+      --card-bg: rgba(46, 28, 92, 0.85);
+      --text-main: #ffffff;
+      --text-muted: #c4b5fd;
+      --accent: #22d3ee;
+      --pink: #f472b6;
+      --gold: #facc15;
+      --emerald: #34d399;
+      --rose: #fb7185;
+    }
+
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background:
+        radial-gradient(circle at 15% 12%, rgba(236, 72, 153, 0.28), transparent 45%),
+        radial-gradient(circle at 88% 20%, rgba(34, 211, 238, 0.26), transparent 45%),
+        radial-gradient(circle at 50% 90%, rgba(168, 85, 247, 0.24), transparent 55%),
+        linear-gradient(170deg, var(--bg-top) 0%, var(--bg-mid) 52%, var(--bg-bottom) 100%);
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 14px 10px 30px;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 376px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .top-bar {
+      background: var(--glass);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      padding: 11px 14px;
+      border-radius: 18px;
+      border: 1px solid var(--glass-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5), 0 0 20px rgba(217, 70, 239, 0.14), inset 0 1px 0 rgba(255,255,255,0.14);
+    }
+
+    .wallet {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: linear-gradient(145deg, rgba(250, 204, 21, 0.28), rgba(249, 115, 22, 0.2));
+      border: 1px solid rgba(250, 204, 21, 0.6);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-weight: 800;
+      color: var(--gold);
+      font-size: 0.94rem;
+      box-shadow: 0 0 16px rgba(250, 204, 21, 0.25);
+    }
+
+    .tabs {
+      display: flex;
+      gap: 6px;
+      background: rgba(12, 7, 28, 0.72);
+      padding: 4px;
+      border-radius: 13px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .tab-btn {
+      background: transparent;
+      color: var(--text-muted);
+      border: none;
+      padding: 6px 12px;
+      border-radius: 9px;
+      font-weight: 800;
+      font-size: 0.83rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 55%, #06b6d4 100%);
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(236, 72, 153, 0.45);
+    }
+
+    .view-section {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 11px;
+    }
+
+    .view-section.active {
+      display: flex;
+    }
+
+    .level-banner {
+      width: 100%;
+      background: var(--glass);
+      backdrop-filter: blur(12px);
+      padding: 8px 14px;
+      border-radius: 15px;
+      border: 1px solid var(--glass-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.82rem;
+    }
+
+    .diff-badge {
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    .diff-easy {
+      background: rgba(16, 185, 129, 0.24);
+      color: #6ee7b7;
+      border: 1px solid rgba(52, 211, 153, 0.55);
+      box-shadow: 0 0 10px rgba(52, 211, 153, 0.25);
+    }
+
+    .diff-medium {
+      background: rgba(250, 204, 21, 0.24);
+      color: #fde047;
+      border: 1px solid rgba(250, 204, 21, 0.55);
+      box-shadow: 0 0 10px rgba(250, 204, 21, 0.25);
+    }
+
+    .diff-hard {
+      background: rgba(244, 63, 94, 0.28);
+      color: #fda4af;
+      border: 1px solid rgba(251, 113, 133, 0.6);
+      box-shadow: 0 0 12px rgba(244, 63, 94, 0.35);
+    }
+
+    .level-select {
+      background: #140b2e;
+      color: #ffffff;
+      border: 1px solid rgba(192, 132, 252, 0.45);
+      border-radius: 9px;
+      padding: 4px 8px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .hud {
+      width: 100%;
+      background: var(--glass);
+      backdrop-filter: blur(12px);
+      padding: 11px 12px;
+      border-radius: 18px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    .hud-item {
+      background: rgba(17, 9, 41, 0.68);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 12px;
+      padding: 6px 4px;
+      text-align: center;
+    }
+
+    .hud-label {
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+
+    .hud-value {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--accent);
+      margin-top: 2px;
+      text-shadow: 0 0 10px rgba(34, 211, 238, 0.35);
+    }
+
+    .hud-value.reward-preview {
+      color: var(--gold);
+      text-shadow: 0 0 10px rgba(250, 204, 21, 0.35);
+    }
+
+    /* Tablero 3D llamativo con borde neón suave */
+    .board-container {
+      background: linear-gradient(155deg, rgba(59, 24, 115, 0.88), rgba(14, 10, 36, 0.96));
+      padding: 12px;
+      border-radius: 24px;
+      border: 1.5px solid rgba(232, 121, 249, 0.42);
+      box-shadow:
+        0 20px 42px rgba(0, 0, 0, 0.7),
+        0 0 26px rgba(168, 85, 247, 0.25),
+        inset 0 2px 5px rgba(255, 255, 255, 0.14),
+        inset 0 -5px 12px rgba(0, 0, 0, 0.65);
+      touch-action: none;
+    }
+
+    #grid {
+      display: grid;
+      grid-template-columns: repeat(6, 48px);
+      grid-template-rows: repeat(6, 48px);
+      gap: 6px;
+      perspective: 700px;
+    }
+
+    .cell {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(145deg, rgba(13, 8, 30, 0.9), rgba(38, 20, 74, 0.68));
+      border-radius: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      cursor: pointer;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.7), inset 0 -1px 2px rgba(255, 255, 255, 0.08);
+      transition: transform 0.16s ease, border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .cell.selected {
+      border-color: #67e8f9;
+      background: linear-gradient(145deg, rgba(236, 72, 153, 0.42), rgba(6, 182, 212, 0.48));
+      box-shadow: 0 0 18px rgba(34, 211, 238, 0.75), inset 0 2px 6px rgba(255, 255, 255, 0.35);
+      transform: translateY(-2px);
+    }
+
+    /* Figuras en 3D con colores intensos */
+    .piece-3d {
+      width: 36px;
+      height: 36px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      transform-style: preserve-3d;
+      transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .cell.selected .piece-3d {
+      transform: translateY(-5px) scale(1.18) rotateX(10deg);
+    }
+
+    .piece-3d::before {
+      content: "";
+      position: absolute;
+      bottom: -3px;
+      left: 14%;
+      width: 72%;
+      height: 8px;
+      background: rgba(0, 0, 0, 0.7);
+      filter: blur(4px);
+      border-radius: 50%;
+      z-index: 0;
+    }
+
+    .piece-3d::after {
+      content: "";
+      position: absolute;
+      top: 3px;
+      left: 20%;
+      width: 60%;
+      height: 34%;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.05));
+      border-radius: 999px;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .shape-body {
+      width: 34px;
+      height: 34px;
+      position: relative;
+      z-index: 1;
+      transition: filter 0.2s;
+    }
+
+    /* 1. Esfera Magenta / Coral Eléctrico 3D */
+    .type-0 .shape-body {
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 25%, #fbcfe8 0%, #ff2e93 48%, #9d174d 100%);
+      box-shadow:
+        0 4px 10px rgba(255, 46, 147, 0.45),
+        inset -4px -5px 8px rgba(80, 7, 36, 0.8),
+        inset 3px 3px 6px rgba(255, 255, 255, 0.55);
+    }
+
+    /* 2. Cubo Cian Eléctrico 3D */
+    .type-1 .shape-body {
+      border-radius: 9px;
+      background: linear-gradient(145deg, #a5f3fc 0%, #00e5ff 46%, #0284c7 100%);
+      box-shadow:
+        0 5px 0 #0369a1,
+        0 7px 14px rgba(0, 229, 255, 0.4),
+        inset 2px 2px 5px rgba(255, 255, 255, 0.75);
+    }
+
+    /* 3. Cápsula Verde Lima / Esmeralda Brillante 3D */
+    .type-2 .shape-body {
+      border-radius: 14px 14px 10px 10px;
+      background: linear-gradient(155deg, #bef264 0%, #10b981 52%, #047857 100%);
+      box-shadow:
+        0 5px 0 #064e3b,
+        0 7px 14px rgba(16, 185, 129, 0.42),
+        inset 2px 2px 5px rgba(255, 255, 255, 0.7);
+    }
+
+    /* 4. Gema Naranja / Dorado Solar 3D */
+    .type-3 .shape-body {
+      border-radius: 11px;
+      transform: rotate(12deg);
+      background: radial-gradient(circle at 32% 28%, #fef08a 0%, #ff9900 52%, #c2410c 100%);
+      box-shadow:
+        0 5px 0 #7c2d12,
+        0 7px 14px rgba(255, 153, 0, 0.45),
+        inset 2px 2px 5px rgba(255, 255, 255, 0.78);
+    }
+
+    .special-pulse .shape-body {
+      box-shadow:
+        0 0 14px rgba(255, 255, 255, 0.95),
+        0 4px 10px rgba(0, 0, 0, 0.7),
+        inset 0 0 0 2.5px #ffffff;
+    }
+
+    .special-pulse .piece-3d::before {
+      content: "+";
+      bottom: auto;
+      left: auto;
+      width: auto;
+      height: auto;
+      background: none;
+      filter: none;
+      color: #ffffff;
+      font-size: 1.05rem;
+      font-weight: 900;
+      text-shadow: 0 2px 5px rgba(0, 0, 0, 0.95);
+      z-index: 3;
+    }
+
+    .special-nova .shape-body {
+      outline: 2.5px dashed #ffffff;
+      outline-offset: 2px;
+      box-shadow:
+        0 0 20px rgba(255, 255, 255, 0.98),
+        0 6px 16px rgba(232, 121, 249, 0.65);
+      animation: nova3dSpin 1.4s ease-in-out infinite alternate;
+    }
+
+    @keyframes nova3dSpin {
+      from { transform: scale(1) rotate(0deg); }
+      to { transform: scale(1.12) rotate(12deg); }
+    }
+
+    .status-msg {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      min-height: 22px;
+      text-align: center;
+      padding: 0 8px;
+      font-weight: 600;
+    }
+
+    .action-btn {
+      background: linear-gradient(180deg, #4ade80 0%, #10b981 100%);
+      color: #042017;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 14px;
+      font-weight: 800;
+      font-size: 0.92rem;
+      cursor: pointer;
+      width: 100%;
+      box-shadow: 0 5px 0 #065f46, 0 10px 22px rgba(16, 185, 129, 0.4);
+      transition: transform 0.12s ease;
+    }
+
+    .action-btn:active {
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 #065f46;
+    }
+
+    .action-btn.retry {
+      background: linear-gradient(180deg, #f472b6 0%, #e11d48 100%);
+      color: #ffffff;
+      box-shadow: 0 5px 0 #881337, 0 10px 22px rgba(244, 63, 94, 0.4);
+    }
+
+    .action-btn.retry:active {
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 #881337;
+    }
+
+    .dream-showcase {
+      width: 100%;
+      background: linear-gradient(155deg, rgba(168, 85, 247, 0.35), rgba(14, 165, 233, 0.22), rgba(17, 10, 41, 0.94));
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 15px;
+      text-align: center;
+      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.12);
+    }
+
+    .showcase-title {
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--accent);
+      margin-bottom: 10px;
+      font-weight: 800;
+    }
+
+    .showcase-scene {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .scene-slot {
+      background: rgba(15, 9, 36, 0.72);
+      border: 1px solid rgba(232, 121, 249, 0.22);
+      border-radius: 15px;
+      padding: 10px 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.5);
+    }
+
+    .scene-icon {
+      font-size: 2.05rem;
+      line-height: 1.1;
+      filter: drop-shadow(0 5px 8px rgba(0, 0, 0, 0.6));
+    }
+
+    .scene-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .scene-sub {
+      font-size: 0.64rem;
+      color: var(--text-muted);
+    }
+
+    .upgrade-list {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .upgrade-card {
+      background: var(--glass);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 12px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .upgrade-info {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .upgrade-cat {
+      font-size: 0.66rem;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      color: var(--pink);
+      font-weight: 800;
+    }
+
+    .upgrade-name {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .upgrade-desc {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+    }
+
+    .buy-btn {
+      background: linear-gradient(180deg, #fef08a 0%, #f59e0b 100%);
+      color: #1e1b18;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 11px;
+      font-weight: 800;
+      font-size: 0.82rem;
+      cursor: pointer;
+      white-space: nowrap;
+      box-shadow: 0 4px 0 #92400e, 0 6px 16px rgba(250, 204, 21, 0.35);
+      transition: transform 0.1s ease, opacity 0.2s;
+    }
+
+    .buy-btn:active:not(:disabled) {
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 #92400e;
+    }
+
+    .buy-btn:disabled {
+      background: #334155;
+      color: #64748b;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+
+    .buy-btn.maxed {
+      background: rgba(52, 211, 153, 0.22);
+      color: var(--emerald);
+      border: 1px solid rgba(52, 211, 153, 0.45);
+      box-shadow: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    <div class="top-bar">
+      <div class="wallet">
+        <span>💵</span>
+        <span id="bills-display">0</span>
+      </div>
+      <div class="tabs">
+        <button class="tab-btn active" id="tab-play" onclick="switchView('play')">Jugar</button>
+        <button class="tab-btn" id="tab-dream" onclick="switchView('dream')">Mi Vida</button>
+      </div>
+    </div>
+
+    <div class="view-section active" id="view-play">
+      <div class="level-banner">
+        <span class="diff-badge diff-easy" id="diff-badge">Fácil</span>
+        <label style="color: var(--text-muted); font-size: 0.75rem;">
+          Ir a nivel:
+          <select class="level-select" id="level-selector" onchange="selectLevelFromDropdown(this.value)"></select>
+        </label>
+      </div>
+
+      <div class="hud">
+        <div class="hud-item">
+          <div class="hud-label">Nivel</div>
+          <div class="hud-value" id="level-display">1/300</div>
+        </div>
+        <div class="hud-item">
+          <div class="hud-label">Movs</div>
+          <div class="hud-value" id="moves-display">22</div>
+        </div>
+        <div class="hud-item">
+          <div class="hud-label">Energía</div>
+          <div class="hud-value" id="score-display">0/28</div>
+        </div>
+        <div class="hud-item">
+          <div class="hud-label">Premio</div>
+          <div class="hud-value reward-preview" id="reward-preview">💵76</div>
+        </div>
+      </div>
+
+      <div class="board-container">
+        <div id="grid"></div>
+      </div>
+
+      <div class="status-msg" id="status">Completa la energía para ganar billetes</div>
+      <button class="action-btn" id="level-action-btn" style="display: none;" onclick="handleLevelAction()"></button>
+    </div>
+
+    <div class="view-section" id="view-dream">
+      <div class="dream-showcase">
+        <div class="showcase-title">Tu Patrimonio Actual</div>
+        <div class="showcase-scene">
+          <div class="scene-slot">
+            <div class="scene-icon" id="scene-house-icon">🏕️</div>
+            <div class="scene-label" id="scene-house-name">Terreno Base</div>
+            <div class="scene-sub">Hogar</div>
+          </div>
+          <div class="scene-slot">
+            <div class="scene-icon" id="scene-car-icon">🚲</div>
+            <div class="scene-label" id="scene-car-name">Sin Auto</div>
+            <div class="scene-sub">Garaje</div>
+          </div>
+          <div class="scene-slot">
+            <div class="scene-icon" id="scene-travel-icon">🗺️</div>
+            <div class="scene-label" id="scene-travel-name">En Ciudad</div>
+            <div class="scene-sub">Viajes</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="upgrade-list" id="upgrade-list"></div>
+    </div>
+  </div>
+
+  <script>
+    const ROWS = 6;
+    const COLS = 6;
+    const MINERAL_TYPES = 4;
+    const TOTAL_LEVELS = 300;
+
+    function build300Levels() {
+      const levels = [];
+      for (let lvl = 1; lvl <= TOTAL_LEVELS; lvl++) {
+        let difficulty = 'easy';
+        let diffLabel = 'Fácil';
+        let moves = 22;
+        let targetEnergy = 28;
+        let baseReward = 80;
+        let moveBonus = 10;
+
+        if (lvl < 100) {
+          difficulty = 'easy';
+          diffLabel = 'Fácil';
+          moves = Math.max(18, 23 - Math.floor(lvl / 25));
+          targetEnergy = 26 + Math.floor(lvl * 0.75);
+          baseReward = 75 + lvl;
+          moveBonus = 10;
+        } else if (lvl < 200) {
+          difficulty = 'medium';
+          diffLabel = 'Medio';
+          const midIdx = lvl - 100;
+          moves = Math.max(15, 19 - Math.floor(midIdx / 25));
+          targetEnergy = 105 + Math.floor(midIdx * 1.15);
+          baseReward = 210 + (midIdx * 2);
+          moveBonus = 18;
+        } else {
+          difficulty = 'hard';
+          diffLabel = 'Difícil';
+          const hardIdx = lvl - 200;
+          moves = Math.max(13, 17 - Math.floor(hardIdx / 25));
+          targetEnergy = 225 + Math.floor(hardIdx * 1.6);
+          baseReward = 450 + (hardIdx * 5);
+          moveBonus = 30;
+        }
+
+        levels.push({
+          level: lvl,
+          difficulty,
+          diffLabel,
+          moves,
+          targetEnergy,
+          baseReward,
+          moveBonus
+        });
+      }
+      return levels;
+    }
+
+    const LEVELS = build300Levels();
+
+    const CATALOG = {
+      house: [
+        { name: "Terreno Base", desc: "Lote listo para construir", icon: "🏕️", cost: 0 },
+        { name: "Cabaña Acogedora", desc: "Primera construcción propia", icon: "🏡", cost: 220 },
+        { name: "Casa Minimalista", desc: "Diseño moderno con jardín", icon: "🏠", cost: 750 },
+        { name: "Mansión con Alberca", desc: "Residencia de lujo completa", icon: "🏰", cost: 2400 }
+      ],
+      car: [
+        { name: "Sin Auto", desc: "Movilidad básica", icon: "🚲", cost: 0 },
+        { name: "Auto Compacto", desc: "Tu primer coche propio", icon: "🚗", cost: 180 },
+        { name: "Camioneta SUV", desc: "Comodidad y espacio familiar", icon: "🚙", cost: 650 },
+        { name: "Deportivo de Lujo", desc: "Velocidad y estilo exclusivo", icon: "🏎️", cost: 2100 }
+      ],
+      travel: [
+        { name: "En Ciudad", desc: "Planeando próximas vacaciones", icon: "🗺️", cost: 0 },
+        { name: "Escapada a la Playa", desc: "Resort frente al mar", icon: "🏖️", cost: 280 },
+        { name: "Tour por Europa", desc: "Recorrido por capitales históricas", icon: "🗼", cost: 950 },
+        { name: "Vuelta al Mundo VIP", desc: "Viaje internacional sin límites", icon: "✈️", cost: 3000 }
+      ]
+    };
+
+    let playerState = {
+      bills: 0,
+      currentLevel: 1,
+      maxUnlockedLevel: 1,
+      upgrades: { house: 0, car: 0, travel: 0 }
+    };
+
+    let board = [];
+    let selectedCell = null;
+    let dragStart = null;
+    let isLocked = false;
+    let movesLeft = 22;
+    let energyCollected = 0;
+    let targetEnergy = 28;
+    let levelFinished = false;
+
+    const gridEl = document.getElementById('grid');
+    const billsEl = document.getElementById('bills-display');
+    const levelEl = document.getElementById('level-display');
+    const movesEl = document.getElementById('moves-display');
+    const scoreEl = document.getElementById('score-display');
+    const rewardPreviewEl = document.getElementById('reward-preview');
+    const diffBadgeEl = document.getElementById('diff-badge');
+    const levelSelectorEl = document.getElementById('level-selector');
+    const statusEl = document.getElementById('status');
+    const actionBtn = document.getElementById('level-action-btn');
+
+    function loadProgress() {
+      const saved = localStorage.getItem('aetherlink_300_save');
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          playerState = {
+            ...playerState,
+            ...parsed,
+            upgrades: { ...playerState.upgrades, ...(parsed.upgrades || {}) }
+          };
+        } catch (e) {}
+      }
+      populateLevelDropdown();
+      updateWalletAndShowcase();
+    }
+
+    function saveProgress() {
+      localStorage.setItem('aetherlink_300_save', JSON.stringify(playerState));
+    }
+
+    function populateLevelDropdown() {
+      levelSelectorEl.innerHTML = '';
+      for (let i = 1; i <= TOTAL_LEVELS; i++) {
+        const opt = document.createElement('option');
+        const unlocked = i <= playerState.maxUnlockedLevel;
+        const zone = i < 100 ? 'Fácil' : (i < 200 ? 'Medio' : 'Difícil');
+        opt.value = i;
+        opt.disabled = !unlocked;
+        opt.textContent = unlocked ? `Nivel ${i} (${zone})` : `Nivel ${i} 🔒`;
+        if (i === playerState.currentLevel) opt.selected = true;
+        levelSelectorEl.appendChild(opt);
+      }
+    }
+
+    function selectLevelFromDropdown(val) {
+      const targetLvl = parseInt(val, 10);
+      if (targetLvl >= 1 && targetLvl <= playerState.maxUnlockedLevel) {
+        playerState.currentLevel = targetLvl;
+        saveProgress();
+        initLevel();
+      } else {
+        levelSelectorEl.value = playerState.currentLevel;
+      }
+    }
+
+    function switchView(viewName) {
+      document.getElementById('view-play').classList.toggle('active', viewName === 'play');
+      document.getElementById('view-dream').classList.toggle('active', viewName === 'dream');
+      document.getElementById('tab-play').classList.toggle('active', viewName === 'play');
+      document.getElementById('tab-dream').classList.toggle('active', viewName === 'dream');
+
+      if (viewName === 'dream') {
+        updateWalletAndShowcase();
+      }
+    }
+
+    function createPiece(type, special = null) {
+      return { type, special };
+    }
+
+    function getCurrentLevelConfig() {
+      return LEVELS[playerState.currentLevel - 1] || LEVELS[0];
+    }
+
+    function initLevel() {
+      const cfg = getCurrentLevelConfig();
+      levelFinished = false;
+      selectedCell = null;
+      actionBtn.style.display = 'none';
+
+      movesLeft = cfg.moves;
+      targetEnergy = cfg.targetEnergy;
+      energyCollected = 0;
+
+      diffBadgeEl.textContent = cfg.diffLabel;
+      diffBadgeEl.className = `diff-badge diff-${cfg.difficulty}`;
+      levelSelectorEl.value = playerState.currentLevel;
+
+      statusEl.textContent = `Nivel ${cfg.level} (${cfg.diffLabel}): reúne ${cfg.targetEnergy} de energía`;
+      statusEl.style.color = "#c4b5fd";
+
+      do {
+        board = [];
+        for (let r = 0; r < ROWS; r++) {
+          const row = [];
+          for (let c = 0; c < COLS; c++) {
+            row.push(createPiece(Math.floor(Math.random() * MINERAL_TYPES), null));
+          }
+          board.push(row);
+        }
+      } while (findMatchGroups().groups.length > 0);
+
+      renderBoard();
+      updateHUD();
+    }
+
+    function renderBoard() {
+      gridEl.innerHTML = '';
+      for (let r = 0; r < ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+          const piece = board[r][c];
+          const cell = document.createElement('div');
+          cell.className = 'cell';
+          cell.dataset.row = r;
+          cell.dataset.col = c;
+
+          if (selectedCell && selectedCell.r === r && selectedCell.c === c) {
+            cell.classList.add('selected');
+          }
+
+          if (piece) {
+            if (piece.special === 'pulse') cell.classList.add('special-pulse');
+            else if (piece.special === 'nova') cell.classList.add('special-nova');
+
+            const piece3d = document.createElement('div');
+            piece3d.className = `piece-3d type-${piece.type}`;
+
+            const body = document.createElement('div');
+            body.className = 'shape-body';
+
+            piece3d.appendChild(body);
+            cell.appendChild(piece3d);
+          }
+
+          cell.addEventListener('pointerdown', (e) => handlePointerDown(r, c, e));
+          cell.addEventListener('pointerup', (e) => handlePointerUp(r, c, e));
+
+          gridEl.appendChild(cell);
+        }
+      }
+    }
+
+    function handlePointerDown(r, c, e) {
+      if (isLocked || levelFinished) return;
+      e.preventDefault();
+      dragStart = { r, c, x: e.clientX, y: e.clientY };
+
+      if (!selectedCell) {
+        selectedCell = { r, c };
+        renderBoard();
+      } else if (selectedCell.r === r && selectedCell.c === c) {
+        selectedCell = null;
+        renderBoard();
+      } else if (areNeighbors(selectedCell.r, selectedCell.c, r, c)) {
+        const first = selectedCell;
+        selectedCell = null;
+        dragStart = null;
+        trySwap(first.r, first.c, r, c);
+      } else {
+        selectedCell = { r, c };
+        renderBoard();
+      }
+    }
+
+    function handlePointerUp(r, c, e) {
+      if (!dragStart || isLocked || levelFinished) return;
+
+      const dx = e.clientX - dragStart.x;
+      const dy = e.clientY - dragStart.y;
+      const threshold = 20;
+
+      if (Math.abs(dx) > threshold || Math.abs(dy) > threshold) {
+        let targetR = dragStart.r;
+        let targetC = dragStart.c;
+
+        if (Math.abs(dx) > Math.abs(dy)) {
+          targetC += dx > 0 ? 1 : -1;
+        } else {
+          targetR += dy > 0 ? 1 : -1;
+        }
+
+        dragStart = null;
+        selectedCell = null;
+
+        if (targetR >= 0 && targetR < ROWS && targetC >= 0 && targetC < COLS) {
+          trySwap(r, c, targetR, targetC);
+        } else {
+          renderBoard();
+        }
+      } else {
+        dragStart = null;
+      }
+    }
+
+    function areNeighbors(r1, c1, r2, c2) {
+      return Math.abs(r1 - r2) + Math.abs(c1 - c2) === 1;
+    }
+
+    function swapValues(r1, c1, r2, c2) {
+      const temp = board[r1][c1];
+      board[r1][c1] = board[r2][c2];
+      board[r2][c2] = temp;
+    }
+
+    function trySwap(r1, c1, r2, c2) {
+      isLocked = true;
+      swapValues(r1, c1, r2, c2);
+      renderBoard();
+
+      const { groups } = findMatchGroups();
+      if (groups.length === 0) {
+        setTimeout(() => {
+          swapValues(r1, c1, r2, c2);
+          renderBoard();
+          isLocked = false;
+        }, 220);
+        return;
+      }
+
+      movesLeft--;
+      resolveMatches({ r1, c1, r2, c2 });
+    }
+
+    function findMatchGroups() {
+      const groups = [];
+      const matchedSet = new Set();
+
+      for (let r = 0; r < ROWS; r++) {
+        let run = [{ r, c: 0 }];
+        for (let c = 1; c <= COLS; c++) {
+          const prev = board[r][c - 1];
+          const curr = c < COLS ? board[r][c] : null;
+          if (prev && curr && curr.type === prev.type) {
+            run.push({ r, c });
+          } else {
+            if (run.length >= 3) {
+              groups.push({ cells: [...run], type: prev.type });
+              run.forEach(pt => matchedSet.add(`${pt.r},${pt.c}`));
+            }
+            run = c < COLS ? [{ r, c }] : [];
+          }
+        }
+      }
+
+      for (let c = 0; c < COLS; c++) {
+        let run = [{ r: 0, c }];
+        for (let r = 1; r <= ROWS; r++) {
+          const prev = board[r - 1][c];
+          const curr = r < ROWS ? board[r][c] : null;
+          if (prev && curr && curr.type === prev.type) {
+            run.push({ r, c });
+          } else {
+            if (run.length >= 3) {
+              groups.push({ cells: [...run], type: prev.type });
+              run.forEach(pt => matchedSet.add(`${pt.r},${pt.c}`));
+            }
+            run = r < ROWS ? [{ r, c }] : [];
+          }
+        }
+      }
+
+      return { groups, matchedSet };
+    }
+
+    function expandSpecialExplosions(initialSet) {
+      const toDestroy = new Set(initialSet);
+      const triggeredSpecials = new Set();
+      let addedNew = true;
+
+      while (addedNew) {
+        addedNew = false;
+        for (const key of Array.from(toDestroy)) {
+          const [r, c] = key.split(',').map(Number);
+          const piece = board[r]?.[c];
+          if (!piece || !piece.special || triggeredSpecials.has(key)) continue;
+
+          triggeredSpecials.add(key);
+
+          if (piece.special === 'pulse') {
+            for (let col = 0; col < COLS; col++) {
+              const k = `${r},${col}`;
+              if (!toDestroy.has(k)) { toDestroy.add(k); addedNew = true; }
+            }
+            for (let row = 0; row < ROWS; row++) {
+              const k = `${row},${c}`;
+              if (!toDestroy.has(k)) { toDestroy.add(k); addedNew = true; }
+            }
+          } else if (piece.special === 'nova') {
+            for (let dr = -1; dr <= 1; dr++) {
+              for (let dc = -1; dc <= 1; dc++) {
+                const nr = r + dr;
+                const nc = c + dc;
+                if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS) {
+                  const k = `${nr},${nc}`;
+                  if (!toDestroy.has(k)) { toDestroy.add(k); addedNew = true; }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      return { toDestroy, specialCount: triggeredSpecials.size };
+    }
+
+    function resolveMatches(lastSwap = null) {
+      const { groups, matchedSet } = findMatchGroups();
+      if (groups.length === 0) {
+        updateHUD();
+        checkEndCondition();
+        isLocked = false;
+        return;
+      }
+
+      const spawnSpecials = [];
+      for (const group of groups) {
+        if (group.cells.length >= 4) {
+          const specialType = group.cells.length >= 5 ? 'nova' : 'pulse';
+          const anchor = group.cells.find(pt =>
+            lastSwap && ((pt.r === lastSwap.r1 && pt.c === lastSwap.c1) || (pt.r === lastSwap.r2 && pt.c === lastSwap.c2))
+          ) || group.cells[Math.floor(group.cells.length / 2)];
+
+          spawnSpecials.push({ r: anchor.r, c: anchor.c, type: group.type, special: specialType });
+        }
+      }
+
+      const { toDestroy, specialCount } = expandSpecialExplosions(matchedSet);
+      const anchorKeys = new Set(spawnSpecials.map(s => `${s.r},${s.c}`));
+      let destroyedCount = 0;
+
+      toDestroy.forEach(key => {
+        if (!anchorKeys.has(key)) {
+          const [r, c] = key.split(',').map(Number);
+          if (board[r][c] !== null) {
+            board[r][c] = null;
+            destroyedCount++;
+          }
+        }
+      });
+
+      spawnSpecials.forEach(sp => {
+        board[sp.r][sp.c] = createPiece(sp.type, sp.special);
+      });
+
+      const bonus = specialCount * 5;
+      energyCollected += destroyedCount + bonus;
+
+      setTimeout(() => {
+        applyGravityAndRefill();
+        renderBoard();
+        updateHUD();
+        resolveMatches(null);
+      }, 240);
+    }
+
+    function applyGravityAndRefill() {
+      for (let c = 0; c < COLS; c++) {
+        let emptySlots = 0;
+        for (let r = ROWS - 1; r >= 0; r--) {
+          if (board[r][c] === null) {
+            emptySlots++;
+          } else if (emptySlots > 0) {
+            board[r + emptySlots][c] = board[r][c];
+            board[r][c] = null;
+          }
+        }
+        for (let r = 0; r < emptySlots; r++) {
+          board[r][c] = createPiece(Math.floor(Math.random() * MINERAL_TYPES), null);
+        }
+      }
+    }
+
+    function updateHUD() {
+      const cfg = getCurrentLevelConfig();
+      levelEl.textContent = `${cfg.level}/${TOTAL_LEVELS}`;
+      movesEl.textContent = movesLeft;
+      scoreEl.textContent = `${energyCollected}/${targetEnergy}`;
+      rewardPreviewEl.textContent = `💵${cfg.baseReward}`;
+      billsEl.textContent = playerState.bills;
+    }
+
+    function checkEndCondition() {
+      if (levelFinished) return;
+      const cfg = getCurrentLevelConfig();
+
+      if (energyCollected >= targetEnergy) {
+        levelFinished = true;
+        const leftoverBonus = movesLeft * cfg.moveBonus;
+        const totalReward = cfg.baseReward + leftoverBonus;
+
+        playerState.bills += totalReward;
+        if (playerState.currentLevel < TOTAL_LEVELS) {
+          playerState.currentLevel += 1;
+          if (playerState.currentLevel > playerState.maxUnlockedLevel) {
+            playerState.maxUnlockedLevel = playerState.currentLevel;
+          }
+        }
+
+        saveProgress();
+        populateLevelDropdown();
+        updateHUD();
+        updateWalletAndShowcase();
+
+        statusEl.textContent = `¡Nivel ${cfg.level} superado! Ganaste 💵 +${totalReward} (Base ${cfg.baseReward} + Bono ${leftoverBonus})`;
+        statusEl.style.color = "#fde047";
+
+        actionBtn.textContent = `Jugar Nivel ${playerState.currentLevel}`;
+        actionBtn.className = 'action-btn';
+        actionBtn.style.display = 'block';
+      } else if (movesLeft <= 0) {
+        levelFinished = true;
+        const consolation = cfg.difficulty === 'hard' ? 60 : (cfg.difficulty === 'medium' ? 35 : 20);
+        playerState.bills += consolation;
+        saveProgress();
+        updateHUD();
+
+        statusEl.textContent = `Sin movimientos. Recibes 💵 +${consolation} de apoyo`;
+        statusEl.style.color = "#fda4af";
+
+        actionBtn.textContent = `Reintentar Nivel ${cfg.level}`;
+        actionBtn.className = 'action-btn retry';
+        actionBtn.style.display = 'block';
+      }
+    }
+
+    function handleLevelAction() {
+      initLevel();
+    }
+
+    function updateWalletAndShowcase() {
+      billsEl.textContent = playerState.bills;
+
+      const houseItem = CATALOG.house[playerState.upgrades.house];
+      const carItem = CATALOG.car[playerState.upgrades.car];
+      const travelItem = CATALOG.travel[playerState.upgrades.travel];
+
+      document.getElementById('scene-house-icon').textContent = houseItem.icon;
+      document.getElementById('scene-house-name').textContent = houseItem.name;
+
+      document.getElementById('scene-car-icon').textContent = carItem.icon;
+      document.getElementById('scene-car-name').textContent = carItem.name;
+
+      document.getElementById('scene-travel-icon').textContent = travelItem.icon;
+      document.getElementById('scene-travel-name').textContent = travelItem.name;
+
+      renderUpgradeCards();
+    }
+
+    function renderUpgradeCards() {
+      const listEl = document.getElementById('upgrade-list');
+      listEl.innerHTML = '';
+
+      const categories = [
+        { key: 'house', title: 'Casa de tus Sueños' },
+        { key: 'car', title: 'Garaje y Carros' },
+        { key: 'travel', title: 'Viajes por el Mundo' }
+      ];
+
+      categories.forEach(cat => {
+        const currentTier = playerState.upgrades[cat.key];
+        const items = CATALOG[cat.key];
+        const nextTier = currentTier + 1;
+
+        const card = document.createElement('div');
+        card.className = 'upgrade-card';
+
+        if (nextTier < items.length) {
+          const nextItem = items[nextTier];
+          const canAfford = playerState.bills >= nextItem.cost;
+
+          card.innerHTML = `
+            <div class="upgrade-info">
+              <div class="upgrade-cat">${cat.title} (Nivel ${nextTier}/${items.length - 1})</div>
+              <div class="upgrade-name">${nextItem.icon} ${nextItem.name}</div>
+              <div class="upgrade-desc">${nextItem.desc}</div>
+            </div>
+            <button class="buy-btn" ${canAfford ? '' : 'disabled'} onclick="buyUpgrade('${cat.key}')">
+              💵 ${nextItem.cost}
+            </button>
+          `;
+        } else {
+          const maxItem = items[currentTier];
+          card.innerHTML = `
+            <div class="upgrade-info">
+              <div class="upgrade-cat">${cat.title} (Completado)</div>
+              <div class="upgrade-name">${maxItem.icon} ${maxItem.name}</div>
+              <div class="upgrade-desc">¡Has alcanzado el máximo nivel en esta meta!</div>
+            </div>
+            <button class="buy-btn maxed" disabled>Adquirido</button>
+          `;
+        }
+
+        listEl.appendChild(card);
+      });
+    }
+
+    function buyUpgrade(category) {
+      const currentTier = playerState.upgrades[category];
+      const nextTier = currentTier + 1;
+      const items = CATALOG[category];
+
+      if (nextTier >= items.length) return;
+
+      const cost = items[nextTier].cost;
+      if (playerState.bills >= cost) {
+        playerState.bills -= cost;
+        playerState.upgrades[category] = nextTier;
+        saveProgress();
+        updateWalletAndShowcase();
+      }
+    }
+
+    loadProgress();
+    initLevel();
+  </script>
+</body>
+</html>
